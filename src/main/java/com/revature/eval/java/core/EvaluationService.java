@@ -14,11 +14,11 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String reverse(String string) {
-		char[] reversed = new char[string.length()];
-		for (int i = reversed.length - 1, j=0; i >= 0; i--, j++) {
-			reversed[j] = string.charAt(i);
+		String reversed = "";
+		for (int i = string.length() - 1; i >= 0; i--) {
+			reversed = reversed + string.charAt(i);
 		}
-		return new String(reversed);
+		return reversed;
 	}
 
 	/**
@@ -30,8 +30,13 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String acronym(String phrase) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		phrase = phrase.toUpperCase();
+		String[] stuff = phrase.split("-|\\s");
+		String acronym = "";
+		for (int i = 0; i < stuff.length; i++) {
+			acronym = acronym + stuff[i].charAt(0);
+		}
+		return acronym;
 	}
 
 	/**
@@ -84,18 +89,27 @@ public class EvaluationService {
 		}
 
 		public boolean isEquilateral() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if (sideOne == sideTwo && sideTwo == sideThree) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 		public boolean isIsosceles() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if (sideOne == sideTwo | sideTwo == sideThree | sideThree == sideOne) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 		public boolean isScalene() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if (sideOne != sideTwo && sideTwo != sideThree && sideThree != sideOne) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 	}
@@ -116,8 +130,54 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getScrabbleScore(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		string = string.toUpperCase();
+		char[] letters = string.toCharArray();
+		char[] valueOne = { 'A', 'E', 'I', 'O', 'U', 'L', 'N', 'R', 'S', 'T' };
+		char[] valueTwo = { 'D', 'G' };
+		char[] valueThree = { 'B', 'C', 'M', 'P' };
+		char[] valueFour = { 'F', 'H', 'V', 'W', 'Y' };
+		char[] valueFive = { 'K' };
+		char[] valueEight = { 'X' };
+		char[] valueTen = { 'Q', 'Z' };
+		int score = 0;
+		for (int i = 0; i < letters.length; i++) {
+			for (int j = 0; j < valueOne.length; j++) {
+				if (letters[i] == valueOne[j]) {
+					score += 1;
+				}
+			}
+			for (int j = 0; j < valueTwo.length; j++) {
+				if (letters[i] == valueTwo[j]) {
+					score += 2;
+				}
+			}
+			for (int j = 0; j < valueThree.length; j++) {
+				if (letters[i] == valueThree[j]) {
+					score += 3;
+				}
+			}
+			for (int j = 0; j < valueFour.length; j++) {
+				if (letters[i] == valueFour[j]) {
+					score += 4;
+				}
+			}
+			for (int j = 0; j < valueFive.length; j++) {
+				if (letters[i] == valueFive[j]) {
+					score += 5;
+				}
+			}
+			for (int j = 0; j < valueEight.length; j++) {
+				if (letters[i] == valueEight[j]) {
+					score += 8;
+				}
+			}
+			for (int j = 0; j < valueTen.length; j++) {
+				if (letters[i] == valueTen [j]) {
+					score += 10;
+				}
+			}
+		}
+		return score;
 	}
 
 	/**
@@ -151,10 +211,17 @@ public class EvaluationService {
 	 * Note: As this exercise only deals with telephone numbers used in
 	 * NANP-countries, only 1 is considered a valid country code.
 	 */
-	public String cleanPhoneNumber(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+	public static String cleanPhoneNumber(String string) throws IllegalArgumentException {
+		
+		String cleanInput = string.replaceAll("[^0-9]", "");
+		if(cleanInput.length() > 11) {
+			throw new IllegalArgumentException("Too many digits!");
+		} else if (cleanInput.length() < 10) {
+			throw new IllegalArgumentException("Invalid input detected!");
+		}
+		return cleanInput;
 	}
+	 
 
 	/**
 	 * 6. Given a phrase, count the occurrences of each word in that phrase.
