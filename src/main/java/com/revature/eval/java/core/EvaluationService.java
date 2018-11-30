@@ -1,6 +1,8 @@
 package com.revature.eval.java.core;
 
 import java.time.temporal.Temporal;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,7 +99,7 @@ public class EvaluationService {
 		}
 
 		public boolean isIsosceles() {
-			if (sideOne == sideTwo | sideTwo == sideThree | sideThree == sideOne) {
+			if (sideOne == sideTwo || sideTwo == sideThree || sideThree == sideOne) {
 				return true;
 			} else {
 				return false;
@@ -172,7 +174,7 @@ public class EvaluationService {
 				}
 			}
 			for (int j = 0; j < valueTen.length; j++) {
-				if (letters[i] == valueTen [j]) {
+				if (letters[i] == valueTen[j]) {
 					score += 10;
 				}
 			}
@@ -212,16 +214,15 @@ public class EvaluationService {
 	 * NANP-countries, only 1 is considered a valid country code.
 	 */
 	public static String cleanPhoneNumber(String string) throws IllegalArgumentException {
-		
+
 		String cleanInput = string.replaceAll("[^0-9]", "");
-		if(cleanInput.length() > 11) {
+		if (cleanInput.length() > 11) {
 			throw new IllegalArgumentException("Too many digits!");
 		} else if (cleanInput.length() < 10) {
 			throw new IllegalArgumentException("Invalid input detected!");
 		}
 		return cleanInput;
 	}
-	 
 
 	/**
 	 * 6. Given a phrase, count the occurrences of each word in that phrase.
@@ -233,8 +234,18 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Map<String, Integer> wordCount(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		String[] stringArray = string.split("\\s|,|-");
+		Map<String, Integer> mapCount = new HashMap<String, Integer>();
+		for (int i = 0; i < stringArray.length; i++) {
+			if (!mapCount.containsKey(stringArray[i])) {
+				mapCount.put(stringArray[i], 1);
+			} else {
+				int counter = mapCount.get(stringArray[i]);
+				mapCount.put(stringArray[i], counter + 1);
+			}
+		}
+		mapCount.remove("");
+		return mapCount;
 	}
 
 	/**
@@ -272,12 +283,12 @@ public class EvaluationService {
 	 * binary search is a dichotomic divide and conquer search algorithm.
 	 * 
 	 */
-	static class BinarySearch<T> {
+	static class BinarySearch<T extends Comparable<T>> {
 		private List<T> sortedList;
 
 		public int indexOf(T t) {
-			// TODO Write an implementation for this method declaration
-			return 0;
+			int search = Collections.binarySearch(sortedList, t);
+			return search;
 		}
 
 		public BinarySearch(List<T> sortedList) {
@@ -313,8 +324,37 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String toPigLatin(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		string = string.toLowerCase();
+		char[] vowels = { 'a', 'e', 'i', 'o', 'u' };
+		String result = "";
+		int start = 0;
+		int vowel = 0;
+		int end = string.length();
+		if (string.charAt(0) == vowels[0] || string.charAt(0) == vowels[1] || string.charAt(0) == vowels[2]
+				|| string.charAt(0) == vowels[3] || string.charAt(0) == vowels[4]) {
+			result = string + "ay";
+			return result;
+		}
+
+		for (int i = 0; i < string.length(); i++) {
+			for (int j = 0; j < vowels.length; j++) {
+				if (string.charAt(i) == vowels[j] /*&& string.charAt(i - 1) != 'q'*/) {
+					vowel = i;
+					String beginning = string.substring(vowel, end);
+					String ending = string.substring(start, vowel);
+					result = beginning + ending + "ay";
+					return result;
+				} else if (string.charAt(i) == vowels[j] && string.charAt(i - 1) == 'q') {
+					vowel = i + 1;
+					String beginning = string.substring(vowel, end);
+					String ending = string.substring(start, vowel);
+					result = beginning + ending + "ay";
+					return result;
+				}
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -333,8 +373,33 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isArmstrongNumber(int input) {
-		// TODO Write an implementation for this method declaration
-		return false;
+
+		int start = input;
+		int remainder;
+		int inBetween;
+		int result = 0;
+		int count = 0;
+
+		inBetween = start;
+
+		while (inBetween != 0) {
+			count++;
+			inBetween = inBetween / 10;
+		}
+
+		inBetween = input;
+
+		while (inBetween != 0) {
+			remainder = inBetween % 10;
+			result = (int) (result + Math.pow((double)remainder, (double) count));
+			inBetween = inBetween / 10;
+		} 
+
+		if (result == input) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
