@@ -1,10 +1,12 @@
 package com.revature.eval.java.core;
 
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -692,21 +694,36 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isPangram(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		boolean[] letterCheck = new boolean[26];
+		int indexValue = 0;
+		for(int i = 0; i < string.length(); i++) {
+			if('a' <= string.charAt(i) && string.charAt(i) <= 'z') {
+				indexValue = string.charAt(i) - 'a';
+			} else if ('A' <= string.charAt(i) && string.charAt(i) <= 'Z') {
+				indexValue = string.charAt(i) - 'A';
+			}
+			letterCheck[indexValue] = true;
+		}
+		
+		for(int i = 0; i < letterCheck.length; i++) {
+			if(letterCheck[i] == false) {
+				return false;
+			} 
+		}
+		return true;
 	}
 
 	/**
 	 * 17. Calculate the moment when someone has lived for 10^9 seconds.
 	 * 
-	 * A gigasecond is 109 (1,000,000,000) seconds.
+	 * A gigasecond is 10^9 (1,000,000,000) seconds.
 	 * 
 	 * @param given
 	 * @return
 	 */
 	public Temporal getGigasecondDate(Temporal given) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		long gigasecond = 1000000000;
+		return given.plus(gigasecond, ChronoUnit.SECONDS);
 	}
 
 	/**
@@ -723,8 +740,21 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getSumOfMultiples(int i, int[] set) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		HashSet<Integer> mults = new HashSet<Integer>();
+		for (int j = 1; j < i; j++) {
+			for (int k = 0; k < set.length; k++) {
+				if (j % set[k] == 0) {
+					mults.add(j);
+				}
+			}
+		}
+		
+		List<Integer> realMults = new ArrayList<Integer>(mults);
+		int sum = 0;
+		for (int j = 0; j < mults.size(); j++) {
+			sum += realMults.get(j);
+		}
+		return sum;
 	}
 
 	/**
