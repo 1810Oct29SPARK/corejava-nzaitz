@@ -1,5 +1,7 @@
 package com.revature.eval.java.core;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
@@ -218,7 +220,7 @@ public class EvaluationService {
 	 * Note: As this exercise only deals with telephone numbers used in
 	 * NANP-countries, only 1 is considered a valid country code.
 	 */
-	public static String cleanPhoneNumber(String string) throws IllegalArgumentException {
+	public String cleanPhoneNumber(String string) throws IllegalArgumentException {
 
 		String cleanInput = string.replaceAll("[^0-9]", "");
 		if (cleanInput.length() > 11) {
@@ -330,36 +332,51 @@ public class EvaluationService {
 	 */
 	public String toPigLatin(String string) {
 		string = string.toLowerCase();
-		char[] vowels = { 'a', 'e', 'i', 'o', 'u' };
-		String result = "";
-		int start = 0;
-		int vowel = 0;
-		int end = string.length();
-		if (string.charAt(0) == vowels[0] || string.charAt(0) == vowels[1] || string.charAt(0) == vowels[2]
-				|| string.charAt(0) == vowels[3] || string.charAt(0) == vowels[4]) {
-			result = string + "ay";
-			return result;
-		}
+		String[] words = string.split("\\s");
+		String pigLatin = "";
 
-		for (int i = 0; i < string.length(); i++) {
-			for (int j = 0; j < vowels.length; j++) {
-				if (string.charAt(i) == vowels[j] && string.charAt(i - 1) != 'q') {
-					vowel = i;
-					String beginning = string.substring(vowel, end);
-					String ending = string.substring(start, vowel);
-					result = beginning + ending + "ay";
-					return result;
-				} else if (string.charAt(i) == vowels[j] && string.charAt(i - 1) == 'q') {
-					vowel = i + 1;
-					String beginning = string.substring(vowel, end);
-					String ending = string.substring(start, vowel);
-					result = beginning + ending + "ay";
-					return result;
+		for (int i = 0; i < words.length; i++) {
+			if (words[i].charAt(0) == 'a' || words[i].charAt(0) == 'e' || words[i].charAt(0) == 'i'
+					|| words[i].charAt(0) == 'o' || words[i].charAt(0) == 'u') {
+				String word = words[i];
+				word = word + "ay";
+				pigLatin = pigLatin + word;
+			}
+
+			String word = words[i];
+			if (word.charAt(0) != 'a' && word.charAt(0) != 'e' && word.charAt(0) != 'i' && word.charAt(0) != 'o'
+					&& word.charAt(0) != 'u') {
+				for (int j = 1; j < word.length(); j++) {
+					if (word.charAt(0) == 'q' && word.charAt(1) == 'u') {
+						String wordSub = word.substring(0, 2);
+						word = word.replaceFirst(wordSub, "");
+						word = word + wordSub + "ay ";
+						break;
+
+					}
+					if (j == word.length() - 1 && word.charAt(j) == 'a' || word.charAt(j) == 'e'
+							|| word.charAt(j) == 'i' || word.charAt(j) == 'o' || word.charAt(j) == 'u') {
+						int firstVowelIndex = j;
+						String wordSub = word.substring(0, firstVowelIndex);
+						word = word.replaceFirst(wordSub, "");
+						word = word + wordSub + "ay";
+						break;
+					}
+					if (word.charAt(j) == 'a' || word.charAt(j) == 'e' || word.charAt(j) == 'i' || word.charAt(j) == 'o'
+							|| word.charAt(j) == 'u') {
+						int firstVowelIndex = j;
+						String wordSub = word.substring(0, firstVowelIndex);
+						word = word.replaceFirst(wordSub, "");
+						word = word + wordSub + "ay ";
+						break;
+
+					}
 				}
+				pigLatin = pigLatin + word;
 			}
 		}
 
-		return result;
+		return pigLatin;
 	}
 
 	/**
@@ -571,7 +588,7 @@ public class EvaluationService {
 					'h', 'g', 'f', 'e', 'd', 'c', 'b', 'a' };
 			char[] alphabet = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
 					'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
-			String scrubbedString =  string.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+			String scrubbedString = string.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 			String tempResult = "";
 			String result = "";
 			for (int i = 0; i < scrubbedString.length(); i++) {
@@ -668,15 +685,15 @@ public class EvaluationService {
 				isbnNumbers.add((int) isbn.charAt(i));
 			}
 		}
-		int[] formulaNumbers = {10,9,8,7,6,5,4,3,2,1};
+		int[] formulaNumbers = { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 };
 		int sum = 0;
 		for (int i = 0; i < formulaNumbers.length; i++) {
-			sum = sum + (isbnNumbers.get(i) * formulaNumbers[i]); 
+			sum = sum + (isbnNumbers.get(i) * formulaNumbers[i]);
 		}
 		if (sum % 11 == 0) {
 			return true;
 		} else {
-			return false; 
+			return false;
 		}
 	}
 
@@ -696,19 +713,19 @@ public class EvaluationService {
 	public boolean isPangram(String string) {
 		boolean[] letterCheck = new boolean[26];
 		int indexValue = 0;
-		for(int i = 0; i < string.length(); i++) {
-			if('a' <= string.charAt(i) && string.charAt(i) <= 'z') {
+		for (int i = 0; i < string.length(); i++) {
+			if ('a' <= string.charAt(i) && string.charAt(i) <= 'z') {
 				indexValue = string.charAt(i) - 'a';
 			} else if ('A' <= string.charAt(i) && string.charAt(i) <= 'Z') {
 				indexValue = string.charAt(i) - 'A';
 			}
 			letterCheck[indexValue] = true;
 		}
-		
-		for(int i = 0; i < letterCheck.length; i++) {
-			if(letterCheck[i] == false) {
+
+		for (int i = 0; i < letterCheck.length; i++) {
+			if (letterCheck[i] == false) {
 				return false;
-			} 
+			}
 		}
 		return true;
 	}
@@ -723,6 +740,11 @@ public class EvaluationService {
 	 */
 	public Temporal getGigasecondDate(Temporal given) {
 		long gigasecond = 1000000000;
+		if (!given.isSupported(ChronoUnit.SECONDS)) {
+			LocalDate newDate = (LocalDate) given;
+			LocalDateTime newDate2 = newDate.atStartOfDay();
+			return newDate2.plus(gigasecond, ChronoUnit.SECONDS);
+		}
 		return given.plus(gigasecond, ChronoUnit.SECONDS);
 	}
 
@@ -748,7 +770,7 @@ public class EvaluationService {
 				}
 			}
 		}
-		
+
 		List<Integer> realMults = new ArrayList<Integer>(mults);
 		int sum = 0;
 		for (int j = 0; j < mults.size(); j++) {
@@ -795,40 +817,42 @@ public class EvaluationService {
 	 */
 	public boolean isLuhnValid(String string) {
 		String luhn = string.replaceAll("\\s", "");
-		if(luhn.length() < 2) {
+		if (luhn.length() < 2) {
 			return false;
 		}
-		for(char c : luhn.toCharArray()) {
+		for (char c : luhn.toCharArray()) {
 			if (Character.isLetter(c) || !Character.isDigit(c)) {
 				return false;
 			}
 		}
 		int sum = 0;
 		int currentNum = 0;
-		for (int i = luhn.length() - 2; i >=0; i -= 2) {
+		for (int i = luhn.length() - 2; i >= 0; i -= 2) {
 			currentNum = Integer.parseInt("" + luhn.charAt(i));
 			currentNum = currentNum * 2;
 			if (currentNum > 9 && i != 1) {
 				currentNum -= 9;
-				sum += currentNum + Character.getNumericValue(luhn.charAt(i+1));
+				sum += currentNum + Character.getNumericValue(luhn.charAt(i + 1));
 			} else if (currentNum > 9 && i == 1) {
 				currentNum -= 9;
-				sum += currentNum + Character.getNumericValue(luhn.charAt(i-1)) + Character.getNumericValue(luhn.charAt(i+1));
-			} else if(currentNum <= 9 && i != 1) {
-				sum += currentNum + Character.getNumericValue(luhn.charAt(i+1));
-			} else if (currentNum <=9 && i == 1){
-				sum += currentNum + Character.getNumericValue(luhn.charAt(i-1)) + Character.getNumericValue(luhn.charAt(i+1));
+				sum += currentNum + Character.getNumericValue(luhn.charAt(i - 1))
+						+ Character.getNumericValue(luhn.charAt(i + 1));
+			} else if (currentNum <= 9 && i != 1) {
+				sum += currentNum + Character.getNumericValue(luhn.charAt(i + 1));
+			} else if (currentNum <= 9 && i == 1) {
+				sum += currentNum + Character.getNumericValue(luhn.charAt(i - 1))
+						+ Character.getNumericValue(luhn.charAt(i + 1));
 			}
-			
+
 		}
-	
+
 		if (sum % 10 == 0) {
 			return true;
 		} else {
-		return false;
+			return false;
 		}
 	}
-	
+
 	/**
 	 * 20. Parse and evaluate simple math word problems returning the answer as an
 	 * integer.
@@ -862,7 +886,7 @@ public class EvaluationService {
 		String[] wordProblem = secondWord.replace("?", "").split("\\s");
 		String operator = wordProblem[1];
 		int answer = 0;
-		switch(operator) {
+		switch (operator) {
 		case "plus":
 			answer = Integer.parseInt(wordProblem[0]) + Integer.parseInt(wordProblem[2]);
 			break;
@@ -875,7 +899,7 @@ public class EvaluationService {
 		case "divided":
 			answer = Integer.parseInt(wordProblem[0]) / Integer.parseInt(wordProblem[2]);
 			break;
-			
+
 		}
 		return answer;
 	}
